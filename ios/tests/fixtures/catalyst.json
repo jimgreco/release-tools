@@ -1,0 +1,90 @@
+{
+  "app": "catalyst",
+  "appId": "1000000003",
+  "bundleId": "com.example.catalyst",
+  "teamId": "ABCDE12345",
+  "certificateSha1": "963A7A5107DB8D4C141371C285F71CCAE84A5452",
+  "certificateSha256": "7fb57dbf0cd7923f9ba97d8801824de79e1ba235dbe78d4a821f8195c30f0bf8",
+  "testerEmailSha256s": [
+    "0c56e87c6cc2911ffe0a5d79a2e834d565fc6aa3581e7af9e29a3c1ebcaa90a3"
+  ],
+  "groups": [
+    {
+      "id": "33333333-0000-4000-8000-000000000001",
+      "name": "Internal Testers",
+      "internal": true,
+      "testers": 1,
+      "automatic": true
+    },
+    {
+      "id": "33333333-0000-4000-8000-000000000002",
+      "name": "External",
+      "internal": false,
+      "testers": 0,
+      "automatic": false
+    }
+  ],
+  "profiles": {
+    "app": {
+      "uuid": "00000000-0000-4000-8000-00000000c001",
+      "name": "Catalyst App Store",
+      "bundleId": "com.example.catalyst",
+      "groups": [
+        "group.com.example.catalyst"
+      ],
+      "appleSignin": [
+        "Default"
+      ],
+      "push": "production"
+    },
+    "extension": {
+      "uuid": "00000000-0000-4000-8000-00000000c002",
+      "name": "Catalyst Widgets App Store",
+      "bundleId": "com.example.catalyst.widgets",
+      "groups": [
+        "group.com.example.catalyst"
+      ],
+      "appleSignin": [],
+      "push": null
+    }
+  },
+  "marketingVersion": "1.4",
+  "apiOrigin": "https://catalyst.example.invalid",
+  "infoPlists": [
+    "ios/Catalyst/Info.plist",
+    "ios/Widgets/Info.plist"
+  ],
+  "configuredPlistKeys": [
+    "API_BASE_URL"
+  ],
+  "excludedHistoricalTesters": [
+    {
+      "id": "33333333-0000-4000-8000-0000000000ff",
+      "emailSha256": "5dd279167d26c557a1e361e05ae69d7f4355cc04bdc775a4ec08213c35267fee"
+    }
+  ],
+  "macProfiles": {
+    "app": {
+      "uuid": "00000000-0000-4000-8000-00000000c101",
+      "name": "Catalyst Mac App Store",
+      "bundleId": "com.example.catalyst",
+      "groups": [
+        "group.com.example.catalyst"
+      ],
+      "appleSignin": [
+        "Default"
+      ],
+      "push": "production",
+      "signedGroups": [],
+      "signedRequired": {
+        "com.apple.security.app-sandbox": true,
+        "com.apple.security.network.client": true
+      }
+    }
+  },
+  "macInstaller": {
+    "identityPrefix": "3rd Party Mac Developer Installer: ",
+    "alternateIdentityPrefix": "Mac Installer Distribution: ",
+    "teamSuffix": " (ABCDE12345)"
+  }
+}

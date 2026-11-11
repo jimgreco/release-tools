@@ -1,0 +1,58 @@
+{
+  "app": "pair",
+  "appId": "1000000004",
+  "bundleId": "com.example.pair",
+  "teamId": "ABCDE12345",
+  "certificateSha1": "963A7A5107DB8D4C141371C285F71CCAE84A5452",
+  "certificateSha256": "7fb57dbf0cd7923f9ba97d8801824de79e1ba235dbe78d4a821f8195c30f0bf8",
+  "testerEmailSha256s": [
+    "0c56e87c6cc2911ffe0a5d79a2e834d565fc6aa3581e7af9e29a3c1ebcaa90a3"
+  ],
+  "groups": [
+    {
+      "id": "44444444-0000-4000-8000-000000000001",
+      "name": "Family",
+      "internal": true,
+      "testers": 1,
+      "automatic": true
+    }
+  ],
+  "profiles": {
+    "app": {
+      "uuid": "00000000-0000-4000-8000-00000000d001",
+      "name": "Pair App Store",
+      "bundleId": "com.example.pair",
+      "groups": [
+        "group.com.example.pair"
+      ],
+      "appleSignin": [
+        "Default"
+      ],
+      "push": null
+    },
+    "extension": {
+      "uuid": "00000000-0000-4000-8000-00000000d002",
+      "name": "Pair Live Activity App Store",
+      "bundleId": "com.example.pair.LiveActivity",
+      "groups": [
+        "group.com.example.pair"
+      ],
+      "appleSignin": [],
+      "push": null
+    }
+  },
+  "marketingVersion": "1.4",
+  "apiOrigin": "https://pair.example.invalid/api",
+  "infoPlists": [
+    "ios/Pair/Info.plist",
+    "ios/PairLiveActivity/Info.plist"
+  ],
+  "configuredPlistKeys": [
+    "API_BASE_URL",
+    "GOOGLE_IOS_CLIENT_ID",
+    "GIT_COMMIT_HASH",
+    "CFBundleURLTypes",
+    "ITSAppUsesNonExemptEncryption"
+  ],
+  "allowApprovedIndividualTesters": true
+}

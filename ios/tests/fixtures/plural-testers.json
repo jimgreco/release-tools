@@ -1,0 +1,50 @@
+{
+  "app": "plural",
+  "appId": "1000000002",
+  "bundleId": "com.example.plural",
+  "teamId": "ABCDE12345",
+  "certificateSha1": "963A7A5107DB8D4C141371C285F71CCAE84A5452",
+  "certificateSha256": "7fb57dbf0cd7923f9ba97d8801824de79e1ba235dbe78d4a821f8195c30f0bf8",
+  "testerEmailSha256s": [
+    "0c56e87c6cc2911ffe0a5d79a2e834d565fc6aa3581e7af9e29a3c1ebcaa90a3",
+    "11d9c00d37a6b24a9b5e918b9eb4bf4111a9274b76309773065e6cc52955b0f4"
+  ],
+  "groups": [
+    {
+      "id": "22222222-0000-4000-8000-000000000001",
+      "name": "Family",
+      "internal": true,
+      "testers": 2,
+      "automatic": true
+    },
+    {
+      "id": "22222222-0000-4000-8000-000000000002",
+      "name": "Friends",
+      "internal": true,
+      "testers": 0,
+      "automatic": true
+    }
+  ],
+  "profiles": {
+    "app": {
+      "uuid": "00000000-0000-4000-8000-00000000b001",
+      "name": "Plural App Store",
+      "bundleId": "com.example.plural",
+      "groups": [],
+      "appleSignin": [
+        "Default"
+      ],
+      "push": null,
+      "associatedDomains": [
+        "applinks:plural.example.invalid",
+        "applinks:www.plural.example.invalid"
+      ]
+    }
+  },
+  "marketingVersion": "1.3",
+  "apiOrigin": null,
+  "infoPlists": [],
+  "configuredPlistKeys": [],
+  "allowDottedBuildHistory": true,
+  "allowApprovedIndividualTesters": true
+}

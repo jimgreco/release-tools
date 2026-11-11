@@ -1,0 +1,12 @@
+name: iOS release cleanup
+description: >-
+  Restore the keychain search list, delete this run's temporary keychain and
+  remove this run's .p12/.p8 files. Invoke with `if: always()` after ios/prepare.
+runs:
+  using: composite
+  steps:
+    - name: Clean only this run's signing files
+      shell: bash
+      env:
+        RELEASE_SCRIPTS: ${{ github.action_path }}/../scripts
+      run: bash "$RELEASE_SCRIPTS/cleanup.sh"

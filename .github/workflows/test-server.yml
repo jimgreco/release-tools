@@ -1,0 +1,32 @@
+name: Test server release engine
+
+on:
+  push:
+    branches: [main]
+    paths: ['server/**', '.github/workflows/server-release.yml', '.github/workflows/test-server.yml']
+  pull_request:
+    paths: ['server/**', '.github/workflows/server-release.yml', '.github/workflows/test-server.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      # The host runs Amazon Linux python3 (3.9); keep the engine compatible.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Compile check (Python 3.9)
+        run: python -m py_compile server/release.py
+      - name: Unit tests
+        run: python -m unittest discover -v -s server/tests -p 'test_release_unit.py'
+      - name: Integration test (real Docker and Compose)
+        run: python -m unittest discover -v -s server/tests -p 'test_release_integration.py'
+      - name: Lint workflows
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash) 1.7.7
+          ./actionlint

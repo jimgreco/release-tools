@@ -1,0 +1,44 @@
+name: Test iOS release engine
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'ios/**'
+      - '.github/workflows/test-ios.yml'
+  pull_request:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/test-ios.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    # Apple's security/codesign tools are mocked; no test needs a macOS runner.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Node engine tests (GET-only App Store Connect client)
+        run: node --test ios/tests/*.test.mjs
+      - name: Python engine tests (local signing, artifact and source checks)
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 -m unittest discover -s ios/tests -p 'test_*.py' -v
+      - name: ShellCheck action scripts
+        run: shellcheck -x ios/scripts/*.sh

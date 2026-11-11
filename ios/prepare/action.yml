@@ -1,0 +1,74 @@
+name: iOS release prepare
+description: >-
+  Bind a TestFlight release to clean source, prepare isolated App Store Connect
+  authentication, run the GET-only preflight, import the existing distribution
+  identity into a temporary keychain and install the pinned existing profiles.
+  Never creates or replaces Apple signing assets. Pair with ios/upload and
+  ios/cleanup (if: always()).
+inputs:
+  policy:
+    description: Path to the app's release-policy.json (repository-relative or absolute).
+    required: true
+  platform:
+    description: ios (IPA on the IOS train) or mac (Mac Catalyst pkg on the MAC_OS train).
+    required: false
+    default: ios
+  sha:
+    description: Full commit SHA being released; must equal the checked-out HEAD.
+    required: false
+    default: ${{ github.sha }}
+  app-store-connect-key-id:
+    description: App Store Connect API key id.
+    required: true
+  app-store-connect-issuer-id:
+    description: App Store Connect API issuer id.
+    required: true
+  app-store-connect-private-key:
+    description: App Store Connect .p8 private key (PEM, \n-escaped PEM, or base64 of the PEM).
+    required: true
+  dist-cert-p12:
+    description: Base64 of the existing Apple Distribution identity (.p12).
+    required: true
+  dist-cert-password:
+    description: Password of the distribution .p12.
+    required: true
+  keychain-password:
+    description: Temporary keychain password. A random one is generated when empty.
+    required: false
+    default: ''
+  installer-cert-p12:
+    description: Base64 of the existing Mac installer identity (.p12). Required for platform mac.
+    required: false
+    default: ''
+  installer-cert-password:
+    description: Password of the installer .p12. Required for platform mac.
+    required: false
+    default: ''
+  xcode-candidates:
+    description: Whitespace-separated Xcode.app paths; the first installed one is selected.
+    required: false
+    default: >-
+      /Applications/Xcode_26.4.app /Applications/Xcode_26.3.app /Applications/Xcode_26.2.app
+      /Applications/Xcode_26.1.app /Applications/Xcode_26.0.app /Applications/Xcode_26.app
+      /Applications/Xcode-26.app /Applications/Xcode.app
+runs:
+  using: composite
+  steps:
+    - name: Prepare release (no Apple writes)
+      shell: bash
+      env:
+        RELEASE_SCRIPTS: ${{ github.action_path }}/../scripts
+        PYTHONDONTWRITEBYTECODE: '1'
+        RELEASE_POLICY_INPUT: ${{ inputs.policy }}
+        RELEASE_PLATFORM_INPUT: ${{ inputs.platform }}
+        RELEASE_SHA_INPUT: ${{ inputs.sha }}
+        XCODE_CANDIDATES: ${{ inputs.xcode-candidates }}
+        ASC_KEY_ID: ${{ inputs.app-store-connect-key-id }}
+        ASC_ISSUER_ID: ${{ inputs.app-store-connect-issuer-id }}
+        ASC_PRIVATE_KEY: ${{ inputs.app-store-connect-private-key }}
+        DIST_CERT_P12: ${{ inputs.dist-cert-p12 }}
+        DIST_CERT_PASSWORD: ${{ inputs.dist-cert-password }}
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
+        INSTALLER_CERT_P12: ${{ inputs.installer-cert-p12 }}
+        INSTALLER_CERT_PASSWORD: ${{ inputs.installer-cert-password }}
+      run: bash "$RELEASE_SCRIPTS/prepare.sh"

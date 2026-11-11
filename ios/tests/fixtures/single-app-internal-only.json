@@ -1,0 +1,46 @@
+{
+  "app": "single",
+  "appId": "1000000001",
+  "bundleId": "com.example.single",
+  "teamId": "ABCDE12345",
+  "certificateSha1": "963A7A5107DB8D4C141371C285F71CCAE84A5452",
+  "certificateSha256": "7fb57dbf0cd7923f9ba97d8801824de79e1ba235dbe78d4a821f8195c30f0bf8",
+  "testerEmailSha256s": [
+    "0c56e87c6cc2911ffe0a5d79a2e834d565fc6aa3581e7af9e29a3c1ebcaa90a3"
+  ],
+  "groups": [
+    {
+      "id": "11111111-0000-4000-8000-000000000001",
+      "name": "Internal",
+      "internal": true,
+      "testers": 1,
+      "automatic": true
+    }
+  ],
+  "profiles": {
+    "app": {
+      "uuid": "00000000-0000-4000-8000-00000000a001",
+      "name": "Single App Store",
+      "bundleId": "com.example.single",
+      "groups": [],
+      "appleSignin": [
+        "Default"
+      ],
+      "push": null,
+      "healthkit": true,
+      "healthkitBackgroundDelivery": true
+    }
+  },
+  "marketingVersion": "1.4.0",
+  "buildAudience": "INTERNAL_ONLY",
+  "apiOrigin": "https://single.example.invalid",
+  "mainInfoPlist": {
+    "APIBaseURL": "{apiOrigin}",
+    "AppBuild": "{build}",
+    "GitCommitHash": "{sha7}"
+  },
+  "infoPlists": [
+    "ios/Single/Info.plist"
+  ],
+  "configuredPlistKeys": []
+}

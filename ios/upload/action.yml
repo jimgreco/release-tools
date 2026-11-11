@@ -1,0 +1,46 @@
+name: iOS release upload
+description: >-
+  After ios/prepare and the app's own Info.plist configuration step: verify the
+  configured source, archive with policy-owned signing settings, export with
+  generated ExportOptions, verify the signed artifact, recheck profiles and the
+  GET-only preflight, upload once with altool and verify processing. The platform
+  (ios or mac) is the one ios/prepare was run with.
+inputs:
+  project:
+    description: Path to the .xcodeproj (exactly one of project or workspace).
+    required: false
+    default: ''
+  workspace:
+    description: Path to the .xcworkspace (exactly one of project or workspace).
+    required: false
+    default: ''
+  scheme:
+    description: Xcode scheme to archive.
+    required: true
+  configuration:
+    description: Build configuration.
+    required: false
+    default: Release
+  extra-build-settings:
+    description: >-
+      Additional xcodebuild settings, one KEY=VALUE per line. Placeholders:
+      @BUILD_NUMBER@, @GIT_SHA@, @GIT_SHA7@, @PROFILE_UUID:<name>@,
+      @MAC_PROFILE_UUID:<name>@, @ENV:<NAME>@. Signing settings (DEVELOPMENT_TEAM,
+      CODE_SIGN_STYLE, CODE_SIGN_IDENTITY, CURRENT_PROJECT_VERSION,
+      OTHER_CODE_SIGN_FLAGS, ...) are owned by the engine and rejected here.
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Archive, verify and upload one build
+      shell: bash
+      env:
+        RELEASE_SCRIPTS: ${{ github.action_path }}/../scripts
+        PYTHONDONTWRITEBYTECODE: '1'
+        XCODE_PROJECT: ${{ inputs.project }}
+        XCODE_WORKSPACE: ${{ inputs.workspace }}
+        XCODE_SCHEME: ${{ inputs.scheme }}
+        XCODE_CONFIGURATION: ${{ inputs.configuration }}
+        RELEASE_EXTRA_BUILD_SETTINGS: ${{ inputs.extra-build-settings }}
+      run: bash "$RELEASE_SCRIPTS/upload.sh"
