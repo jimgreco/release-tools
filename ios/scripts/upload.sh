@@ -6,7 +6,10 @@
 # Inputs (environment): RELEASE_SCRIPTS, XCODE_PROJECT or XCODE_WORKSPACE, XCODE_SCHEME,
 # XCODE_CONFIGURATION, RELEASE_EXTRA_BUILD_SETTINGS, plus everything ios/prepare exported.
 set -euo pipefail
-umask 077
+# Build products must keep normal modes: Apple rejects a Mac installer package
+# whose payload is readable only by its owner (ITMS-90255). This script writes
+# no secrets; prepare.sh keeps the owner-only umask for the key, certificate and keychain.
+umask 022
 # shellcheck source=ios/scripts/lib.sh
 . "$RELEASE_SCRIPTS/lib.sh"
 

@@ -681,5 +681,13 @@ class ShellHelperTests(unittest.TestCase):
             self.assertEqual(env_file.read_text(), 'A=b c\n')
 
 
+
+class UploadScriptModeTests(unittest.TestCase):
+    def test_upload_builds_with_world_readable_umask(self):
+        # A 077 umask during archive/export made Mac Catalyst packages fail ITMS-90255.
+        script = (Path(__file__).resolve().parents[1] / 'scripts' / 'upload.sh').read_text()
+        self.assertNotIn('umask 077', script)
+        self.assertLess(script.index('umask 022'), script.index('archive.py'))
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
