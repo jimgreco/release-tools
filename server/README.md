@@ -27,6 +27,15 @@ A record of every release is kept in `~/deploy/release-records/<app>-<sha>.json`
 The script never edits `.env` or shared Compose files, creates roles, or prunes
 images, and it never prints Compose or inspect output.
 
+## Recreating a service by hand
+
+After the first release, the app's image is set only by its override file in
+`~/deploy/releases/`. A bare `docker-compose up -d <service>` in `~/deploy`
+omits that file and recreates the service from its old build or default
+image. Reuse the exact `-f` chain in the running container's
+`com.docker.compose.project.config_files` label, or release again through the
+workflow. Ops scripts that recreate app services must do the same.
+
 ## Manifest (`.github/release/server.json` in the app repo)
 
 ```json
