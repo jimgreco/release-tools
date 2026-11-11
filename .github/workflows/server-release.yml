@@ -38,15 +38,18 @@ on:
         description: GitHub environment that guards the host release
         type: string
         default: production
+    # Optional so apps that keep these in the `production` environment work:
+    # the release job runs in that environment, whose secrets take precedence
+    # over passed ones. The release job fails closed if any is still empty.
     secrets:
       EC2_HOST:
-        required: true
+        required: false
       EC2_USER:
-        required: true
+        required: false
       EC2_SSH_KEY:
-        required: true
+        required: false
       EC2_SSH_KNOWN_HOSTS:
-        required: true
+        required: false
 
 permissions:
   contents: read
