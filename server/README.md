@@ -53,7 +53,7 @@ workflow. Ops scripts that recreate app services must do the same.
   },
   "legacy_overrides": ["app-release-[a-z0-9_]+\\.json"],
   "backup": { "database": "macro_tracker", "require_table": "users", "keep": 20 },
-  "public": { "url": "https://macrovana.com/version", "field": "build", "length": 7 }
+  "public": { "url": "https://macrovana.com/version", "field": "appBuild", "length": 7 }
 }
 ```
 
