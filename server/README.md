@@ -72,7 +72,8 @@ workflow. Ops scripts that recreate app services must do the same.
 | `migrate` | `{stop_first, commands[]}`: optionally stop the services, then run each command from the new image. |
 | `on_failure_after_migration` | `stop` (default) or `rollback`. |
 | `health_attempts` | Health retries, 2 seconds apart (default 60). |
-| `public` | Optional: `url` and dotted `field` holding the build, `length` (7 or 40), and `refuse_backwards` (deploy only if the live build is an ancestor of this commit). The workflow checks it before and after the host release. |
+| `refuse_backwards` | If `true`, the workflow first reads the commit the services run now from their exact-commit image tags on the host (`release.py --live-build`, read-only) and deploys only if that commit is an ancestor of this one. A host it cannot read, mixed commits, or a live build outside this repository's history all refuse. |
+| `public` | Optional: `url` and dotted `field` holding the build, `length` (7 or 40), and `refuse_backwards` (the same check, using the live build the public endpoint reports). The workflow checks it before and after the host release. |
 
 ## Testing
 
