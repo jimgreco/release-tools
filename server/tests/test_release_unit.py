@@ -54,6 +54,31 @@ class ManifestTests(unittest.TestCase):
         with self.assertRaises(release.ReleaseError):
             release.load_manifest(encoded(manifest(interpolate_from_live={"X": "shell:rm"})))
 
+    def test_rejects_non_boolean_refuse_backwards(self):
+        with self.assertRaises(release.ReleaseError):
+            release.load_manifest(encoded(manifest(refuse_backwards="yes")))
+
+    def test_live_build_reads_image_tags(self):
+        value = manifest(services={"api": {"health": ["true"], "tag_suffix": "api"}, "web": {"health": ["true"], "tag_suffix": "web"}})
+        live = {"api": {"Config": {"Image": "ghcr.io/jimgreco/demo:" + SHA + "-api"}},
+                "web": {"Config": {"Image": "ghcr.io/jimgreco/demo:" + SHA + "-web"}}}
+        self.assertEqual(release.live_build(value, live), SHA)
+
+    def test_live_build_refuses_unreadable_or_mixed_state(self):
+        other = "b" * 40
+        two = manifest(services={"a": {"health": ["true"]}, "b": {"health": ["true"]}})
+        cases = [
+            (manifest(), {}),
+            (manifest(), {"demo": {"Config": {"Image": "demo:" + SHA}}}),
+            (manifest(), {"demo": {"Config": {"Image": "ghcr.io/jimgreco/demo:latest"}}}),
+            (manifest(), {"demo": {"Config": {"Image": "ghcr.io/jimgreco/demo:" + SHA + "-api"}}}),
+            (two, {"a": {"Config": {"Image": "ghcr.io/jimgreco/demo:" + SHA}},
+                   "b": {"Config": {"Image": "ghcr.io/jimgreco/demo:" + other}}}),
+        ]
+        for value, live in cases:
+            with self.assertRaises(release.ReleaseError):
+                release.live_build(value, live)
+
     def test_target_image_suffix(self):
         value = manifest(services={"api": {"health": ["true"], "tag_suffix": "api"}})
         self.assertEqual(release.target_image(value, "api", SHA), "ghcr.io/jimgreco/demo:" + SHA + "-api")

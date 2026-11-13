@@ -141,12 +141,27 @@ def load_manifest(raw):
             check(isinstance(step, dict) and step.get("service") in services and isinstance(step.get("command"), list),
                   "Invalid {} command".format(group))
     check(manifest.get("on_failure_after_migration", "stop") in ("stop", "rollback"), "Invalid on_failure_after_migration")
+    check(isinstance(manifest.get("refuse_backwards", False), bool), "refuse_backwards must be true or false")
     return manifest
 
 
 def target_image(manifest, service, sha):
     suffix = manifest["services"][service].get("tag_suffix", "")
     return "{}:{}{}".format(manifest["image"], sha, "-" + suffix if suffix else "")
+
+
+def live_build(manifest, live):
+    """The one commit every service runs, read from its exact-commit image tag."""
+    shas = set()
+    for service, spec in manifest["services"].items():
+        check(service in live, service + " is not running; there is no live build to compare")
+        suffix = spec.get("tag_suffix", "")
+        pattern = re.escape(manifest["image"]) + r":([0-9a-f]{40})" + (re.escape("-" + suffix) if suffix else "")
+        match = re.fullmatch(pattern, live[service]["Config"]["Image"])
+        check(match, service + " does not run an exact-commit image of " + manifest["image"])
+        shas.add(match.group(1))
+    check(len(shas) == 1, "Services run different commits; reconcile before release")
+    return shas.pop()
 
 
 # ── locking ──────────────────────────────────────────────────────────────────
@@ -553,9 +568,14 @@ def main(argv=None):
     parser.add_argument("--sha", required=True, help="Exact 40-character commit SHA")
     parser.add_argument("--manifest-b64", required=True, help="Base64 of the app's server release manifest JSON")
     parser.add_argument("--check", action="store_true", help="Read-only preflight: verify live config, change nothing")
+    parser.add_argument("--live-build", action="store_true",
+                        help="Read-only: print the commit the services run now (from their image tags), change nothing")
     args = parser.parse_args(argv)
     check(SHA.fullmatch(args.sha), "Release requires an exact lowercase 40-character commit SHA")
     manifest = load_manifest(args.manifest_b64)
+    if args.live_build:
+        print(live_build(manifest, live_containers(list(manifest["services"]))), flush=True)
+        return
     handles = acquire_locks(time.time() + LOCK_WAIT_SECONDS)
     try:
         release(manifest, args.sha, check_only=args.check)
